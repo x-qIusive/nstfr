@@ -115,28 +115,9 @@
           });
         }
 
-        function spawnCluster() {
+        function spawnGlitch() {
           logoGlitchStart = elapsed;
           logoGlitchUntil = elapsed + 420;
-          const y = Math.random() * height;
-          const count = 2 + Math.floor(Math.random() * 6);
-          for (let i = 0; i < count; i++) {
-            const lineWidth = width * (.55 + Math.random() * .65);
-            streaks.push({
-              x: width * (-.12 + Math.random() * .2),
-              y: y + i * (2 + Math.random() * 8),
-              width: lineWidth,
-              height: 1 + Math.random() * 6,
-              age: 0,
-              duration: 90 + Math.random() * 240,
-              drift: -220 + Math.random() * 440,
-              phase: Math.random() * Math.PI * 2,
-              segments: Array.from({ length: 8 + Math.floor(Math.random() * 9) }, () => .2 + Math.random() * .8)
-            });
-          }
-          if (Math.random() < .5) flash = 25 + Math.random() * 50;
-          shake = 70 + Math.random() * 110;
-          if (Math.random() < .2) quietUntil = elapsed + 700 + Math.random() * 1300;
         }
 
         function drawStreak(line, delta) {
@@ -184,30 +165,10 @@
           elapsed += delta;
           ctx.fillStyle = '#000';
           ctx.fillRect(0, 0, width, height);
-          drawTexture();
           drawLogo();
-          if (elapsed >= nextCluster && elapsed >= quietUntil) {
-            spawnCluster();
-            nextCluster = elapsed + 260 + Math.random() * 620;
-          }
-          if (shake > 0) {
-            ctx.save();
-            ctx.globalAlpha = .12;
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(-20 + Math.random() * 40, Math.random() * height, width, .5 + Math.random() * 1.5);
-            ctx.restore();
-            shake -= delta;
-          }
-          for (let i = streaks.length - 1; i >= 0; i--) {
-            if (!drawStreak(streaks[i], delta)) streaks.splice(i, 1);
-          }
-          if (flash > 0) {
-            ctx.save();
-            ctx.globalAlpha = flash / 500;
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, width, height);
-            ctx.restore();
-            flash -= delta;
+          if (elapsed >= nextCluster) {
+            spawnGlitch();
+            nextCluster = elapsed + 850 + Math.random() * 1600;
           }
         }
 
